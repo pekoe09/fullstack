@@ -39,23 +39,7 @@ class App extends React.Component {
     }
   }
 
-  addGood = () => {
-    this.setState((prevState) => ({
-      goods: prevState.goods + 1
-    }))
-  }
-
-  addNeutral = () => {
-    this.setState((prevState) => ({
-      neutrals: prevState.neutrals + 1
-    }))
-  }
-
-  addBad = () => {
-    this.setState((prevState) => ({
-      bads: prevState.bads + 1
-    }))
-  }
+  addFeedback = (counter, value) => () => this.setState({ [counter]: value })
 
   getAverage = () => (
     (this.state.goods - this.state.bads) /
@@ -72,9 +56,9 @@ class App extends React.Component {
     return (
       <div>
         <Header text="anna palautetta" />
-        <Button handleClick={this.addGood} btnText="hyvä" />
-        <Button handleClick={this.addNeutral} btnText="neutraali" />
-        <Button handleClick={this.addBad} btnText="huono" />
+        <Button handleClick={this.addFeedback("goods", this.state.goods + 1)} btnText="hyvä" />
+        <Button handleClick={this.addFeedback("neutrals", this.state.neutrals + 1)} btnText="neutraali" />
+        <Button handleClick={this.addFeedback("bads", this.state.bads + 1)} btnText="huono" />
         <Statistics
           goods={this.state.goods}
           neutrals={this.state.neutrals}
