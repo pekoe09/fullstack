@@ -1,6 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+const Header = ({text}) => <h1>{text}</h1>
+
+const Button = ({handleClick, btnText}) => (
+  <button onClick={handleClick}>{btnText}</button>
+)
+
+const Statistics = (props) => (
+  <div>
+    <Header text="statistiikka" />
+    <Statistic label="hyvä" value={props.goods} />
+    <Statistic label="neutraali" value={props.neutrals} />
+    <Statistic label="huono" value={props.bads} />
+    <Statistic label="keskiarvo" value={props.getAverage()} />
+    <Statistic label="positiivisia" value={props.getGoodShare()} />
+  </div>
+)
+
+const Statistic = ({label, value}) => (
+  <p>{label} {value}</p>
+)
+
 class App extends React.Component {
 
   constructor(props) {
@@ -56,16 +77,17 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>anna palautetta</h1>
-        <button onClick={this.addGood}>hyvä</button>
-        <button onClick={this.addNeutral}>neutraali</button>
-        <button onClick={this.addBad}>huono</button>
-        <h1>statistiikka</h1>
-        <p>hyvä {this.state.goods}</p>
-        <p>neutraali {this.state.neutrals}</p>
-        <p>huono {this.state.bads}</p>
-        <p>keskiarvo {this.getAverage()}</p>
-        <p>positiivisia {this.getGoodShare()}</p>
+        <Header text="anna palautetta" />
+        <Button handleClick={this.addGood} btnText="hyvä" />
+        <Button handleClick={this.addNeutral} btnText="neutraali" />
+        <Button handleClick={this.addBad} btnText="huono" />
+        <Statistics
+          goods={this.state.goods}
+          neutrals={this.state.neutrals}
+          bads={this.state.bads}
+          getAverage={this.getAverage}
+          getGoodShare={this.getGoodShare}
+        />
       </div>
     )
   }
