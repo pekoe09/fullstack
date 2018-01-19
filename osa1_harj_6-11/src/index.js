@@ -1,24 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Header = ({text}) => <h1>{text}</h1>
+const Header = ({ text }) => <h1>{text}</h1>
 
-const Button = ({handleClick, btnText}) => (
+const Button = ({ handleClick, btnText }) => (
   <button onClick={handleClick}>{btnText}</button>
 )
 
 const Statistics = (props) => (
   <div>
     <Header text="statistiikka" />
-    <Statistic label="hyvä" value={props.goods} />
-    <Statistic label="neutraali" value={props.neutrals} />
-    <Statistic label="huono" value={props.bads} />
-    <Statistic label="keskiarvo" value={props.getAverage()} />
-    <Statistic label="positiivisia" value={props.getGoodShare()} />
+    {props.goods + props.neutrals + props.bads > 0 ? (
+      <div>        
+        <Statistic label="hyvä" value={props.goods} />
+        <Statistic label="neutraali" value={props.neutrals} />
+        <Statistic label="huono" value={props.bads} />
+        <Statistic label="keskiarvo" value={props.getAverage()} />
+        <Statistic label="positiivisia" value={props.getGoodShare()} />
+      </div>
+    ) : (
+      <p>ei yhtään palautetta annettu</p>
+    )}
   </div>
 )
 
-const Statistic = ({label, value}) => (
+const Statistic = ({ label, value }) => (
   <p>{label} {value}</p>
 )
 
@@ -51,28 +57,16 @@ class App extends React.Component {
     }))
   }
 
-  getAverage = () => {
-    if (this.state.goods + this.state.neutrals + this.state.bads > 0) {
-      return (
-        (this.state.goods - this.state.bads) /
-        (this.state.goods + this.state.neutrals + this.state.bads)
-      ).toFixed(1)
-    } else {
-      return "-"
-    }
-  }
+  getAverage = () => (
+    (this.state.goods - this.state.bads) /
+    (this.state.goods + this.state.neutrals + this.state.bads)
+  ).toFixed(1)
 
-  getGoodShare = () => {
-    if (this.state.goods + this.state.neutrals + this.state.bads > 0) {
-      return (
-        this.state.goods /
-        (this.state.goods + this.state.neutrals + this.state.bads)
-        * 100
-      ).toFixed(1) + "%"
-    } else {
-      return "-"
-    }
-  }
+  getGoodShare = () => (
+    this.state.goods /
+    (this.state.goods + this.state.neutrals + this.state.bads)
+    * 100
+  ).toFixed(1) + "%"    
 
   render() {
     return (
