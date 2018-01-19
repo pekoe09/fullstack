@@ -11,13 +11,15 @@ const Statistics = (props) => (
   <div>
     <Header text="statistiikka" />
     {props.goods + props.neutrals + props.bads > 0 ? (
-      <div>        
-        <Statistic label="hyvä" value={props.goods} />
-        <Statistic label="neutraali" value={props.neutrals} />
-        <Statistic label="huono" value={props.bads} />
-        <Statistic label="keskiarvo" value={props.getAverage()} />
-        <Statistic label="positiivisia" value={props.getGoodShare()} />
-      </div>
+      <table>
+        <tbody>
+          <Statistic label="hyvä" value={props.goods} />
+          <Statistic label="neutraali" value={props.neutrals} />
+          <Statistic label="huono" value={props.bads} />
+          <Statistic label="keskiarvo" value={props.getAverage()} />
+          <Statistic label="positiivisia" value={props.getGoodShare()} />
+        </tbody>
+      </table>
     ) : (
       <p>ei yhtään palautetta annettu</p>
     )}
@@ -25,7 +27,10 @@ const Statistics = (props) => (
 )
 
 const Statistic = ({ label, value }) => (
-  <p>{label} {value}</p>
+  <tr>
+    <td>{label}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 class App extends React.Component {
