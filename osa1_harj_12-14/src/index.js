@@ -8,7 +8,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       selected: 0,
-      votes: [0, 0, 0, 0, 0, 0]
+      votes: [0, 0, 0, 0, 0, 0],
+      favorite: 0
     }
   }
 
@@ -17,7 +18,12 @@ class App extends React.Component {
   vote = () => () => {
     let newVotes = this.state.votes.slice()
     newVotes[this.state.selected] = newVotes[this.state.selected] + 1
-    this.setState({ votes: newVotes })
+    let newFavorite = newVotes[this.state.selected] > newVotes[this.state.favorite] ?
+      this.state.selected : this.state.favorite
+    this.setState({
+      votes: newVotes,
+      favorite: newFavorite
+    })
   }
 
   render() {
@@ -29,6 +35,9 @@ class App extends React.Component {
           <Button handleClick={this.vote()} btnText="vote" />
           <Button handleClick={this.getNext()} btnText="next anecdote" />
         </div>
+        <h1>anecdote with most votes:</h1>
+        <div>{this.props.anecdotes[this.state.favorite]}</div>
+        <div>has {this.state.votes[this.state.favorite]} votes</div>
       </div>
     )
   }
