@@ -11,7 +11,7 @@ class App extends React.Component {
       bads: 0
     }
   }
-  
+
   addGood = () => {
     this.setState((prevState) => ({
       goods: prevState.goods + 1
@@ -30,6 +30,29 @@ class App extends React.Component {
     }))
   }
 
+  getAverage = () => {
+    if (this.state.goods + this.state.neutrals + this.state.bads > 0) {
+      return (
+        (this.state.goods - this.state.bads) /
+        (this.state.goods + this.state.neutrals + this.state.bads)
+      ).toFixed(1)
+    } else {
+      return "-"
+    }
+  }
+
+  getGoodShare = () => {
+    if (this.state.goods + this.state.neutrals + this.state.bads > 0) {
+      return (
+        this.state.goods /
+        (this.state.goods + this.state.neutrals + this.state.bads)
+        * 100
+      ).toFixed(1) + "%"
+    } else {
+      return "-"
+    }
+  }
+
   render() {
     return (
       <div>
@@ -41,6 +64,8 @@ class App extends React.Component {
         <p>hyvä {this.state.goods}</p>
         <p>neutraali {this.state.neutrals}</p>
         <p>huono {this.state.bads}</p>
+        <p>keskiarvo {this.getAverage()}</p>
+        <p>positiivisia {this.getGoodShare()}</p>
       </div>
     )
   }
