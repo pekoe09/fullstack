@@ -17,13 +17,12 @@ const Sisalto = ({ kurssi }) =>
 
 const Osa = ({ osa }) => <p>{osa.nimi} {osa.tehtavia}</p>
 
-const Yhteensa = ({ kurssi }) => {
-  let tehtaviaYht = 0
-  kurssi.osat.forEach(osa => {
-    tehtaviaYht += osa.tehtavia
-  });
-  return <div>yhteensä {tehtaviaYht} tehtävää</div>
-}
+const Yhteensa = ({ kurssi }) =>
+  <div>
+    yhteensä {kurssi.osat.reduce(
+      function (yhteensa, osa) { return yhteensa + osa.tehtavia },
+      0)} tehtävää
+  </div>
 
 const App = () => {
   const kurssi = {
