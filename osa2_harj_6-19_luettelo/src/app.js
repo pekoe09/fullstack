@@ -1,4 +1,8 @@
 import React from 'react';
+import Header from './components/header'
+import Input from './components/input'
+import AddPerson from './components/addPerson'
+import Persons from './components/persons'
 
 class App extends React.Component {
   constructor(props) {
@@ -34,16 +38,16 @@ class App extends React.Component {
     }
   }
 
-  handleNameChange = (event) => {
-    this.setState({ newName: event.target.value })
+  handleNameChange = (name) => {
+    this.setState({ newName: name })
   }
 
-  handleNumberChange = (event) => {
-    this.setState({ newNumber: event.target.value })
+  handleNumberChange = (number) => {
+    this.setState({ newNumber: number })
   }
 
-  handleFilterChange = (event) => {
-    this.setState({ filter: event.target.value })
+  handleFilterChange = (text) => {
+    this.setState({ filter: text })
   }
 
   render() {
@@ -52,33 +56,16 @@ class App extends React.Component {
 
     return (
       <div>
-        <h1>Puhelinluettelo</h1>
-        <div>rajaa näytettäviä: <input value={this.state.filter} onChange={this.handleFilterChange} /></div>
-        <h2>Lisää uusi</h2>
-        <form onSubmit={this.addPerson}>
-          <div>
-            nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
-          </div>
-          <div>
-            numero: <input value={this.state.newNumber} onChange={this.handleNumberChange} />
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
-        <h2>Numerot</h2>
-        <table>
-          <tbody>
-            {personsToShow.map(person => {
-              return (
-                <tr key={person.name}>
-                  <td>{person.name}</td>
-                  <td>{person.number}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <Header level={1} text="Puhelinluettelo" />
+        <Input label="rajaa näytettäviä" value={this.state.filter} handleChange={this.handleFilterChange} />        
+        <AddPerson
+          newName={this.state.newName}
+          newNumber={this.state.newNumber}
+          handleNameChange={this.handleNameChange}
+          handleNumberChange={this.handleNumberChange}
+          handleSubmit={this.addPerson}
+        />        
+        <Persons persons={personsToShow} />
       </div>
     )
   }
