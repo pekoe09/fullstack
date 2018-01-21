@@ -5,6 +5,7 @@ const Kurssi = ({ kurssi }) =>
   <div>
     <Otsikko teksti={kurssi.nimi} />
     <Sisalto kurssi={kurssi} />
+    <Yhteensa kurssi={kurssi} />
   </div>
 
 const Otsikko = ({ teksti }) => <h1>{teksti}</h1>
@@ -15,6 +16,14 @@ const Sisalto = ({ kurssi }) =>
   </div>
 
 const Osa = ({ osa }) => <p>{osa.nimi} {osa.tehtavia}</p>
+
+const Yhteensa = ({ kurssi }) => {
+  let tehtaviaYht = 0
+  kurssi.osat.forEach(osa => {
+    tehtaviaYht += osa.tehtavia
+  });
+  return <div>yhteensä {tehtaviaYht} tehtävää</div>
+}
 
 const App = () => {
   const kurssi = {
@@ -34,6 +43,11 @@ const App = () => {
         nimi: 'Komponenttien tila',
         tehtavia: 14,
         id: 3
+      },
+      {
+        nimi: 'Redux',
+        tehtavia: 7,
+        id: 4
       }
     ]
   }
