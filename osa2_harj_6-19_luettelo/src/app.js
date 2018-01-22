@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 import Header from './components/header'
 import Input from './components/input'
@@ -18,10 +18,10 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        this.setState({ persons: response.data })
+        this.setState({ persons: response })
       })
   }
 
@@ -34,11 +34,11 @@ class App extends React.Component {
         name: this.state.newName,
         number: this.state.newNumber
       }
-      axios
-        .post('http://localhost:3001/persons', newPerson)
+      personService
+        .create(newPerson)
         .then(response => {
           this.setState({
-            persons: this.state.persons.concat(response.data),
+            persons: this.state.persons.concat(response),
             newName: '',
             newNumber: ''
           })

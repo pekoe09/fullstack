@@ -29,6 +29,11 @@
       "name": "Toinen",
       "number": "888888",
       "id": 6
+    },
+    {
+      "name": "Kolmas",
+      "number": "8799879",
+      "id": 7
     }
   ]
 }
