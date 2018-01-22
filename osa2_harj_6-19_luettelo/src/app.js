@@ -1,4 +1,6 @@
-import React from 'react';
+import React from 'react'
+import axios from 'axios'
+
 import Header from './components/header'
 import Input from './components/input'
 import AddPerson from './components/addPerson'
@@ -8,16 +10,19 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        {
-          name: 'Arto Hellas',
-          number: '040-123456'
-        }
-      ],
+      persons: [],
       newName: '',
       newNumber: '',
       filter: ''
     }
+  }
+
+  componentWillMount() {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        this.setState({ persons: response.data })
+      })
   }
 
   addPerson = (event) => {
@@ -57,14 +62,14 @@ class App extends React.Component {
     return (
       <div>
         <Header level={1} text="Puhelinluettelo" />
-        <Input label="rajaa näytettäviä" value={this.state.filter} handleChange={this.handleFilterChange} />        
+        <Input label="rajaa näytettäviä" value={this.state.filter} handleChange={this.handleFilterChange} />
         <AddPerson
           newName={this.state.newName}
           newNumber={this.state.newNumber}
           handleNameChange={this.handleNameChange}
           handleNumberChange={this.handleNumberChange}
           handleSubmit={this.addPerson}
-        />        
+        />
         <Persons persons={personsToShow} />
       </div>
     )
