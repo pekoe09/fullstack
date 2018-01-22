@@ -18,6 +18,12 @@ class App extends React.Component {
     this.setState({ filter: event.target.value })
   }
 
+  setFilter = (newFilter) => {
+    return () => {
+      this.setState({ filter: newFilter })
+    }
+  }
+
   componentWillMount() {
     axios
       .get('https://restcountries.eu/rest/v2/all')
@@ -33,7 +39,7 @@ class App extends React.Component {
     return (
       <div>
         <Filter filter={this.state.filter} handleFilterChange={this.handleFilterChange} />
-        <CountryList countries={countriesToShow} />
+        <CountryList countries={countriesToShow} setFilter={this.setFilter} />
       </div>
     )
   }
