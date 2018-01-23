@@ -1,10 +1,12 @@
 import React from 'react'
 import personService from './services/persons'
+import './index.css'
 
 import Header from './components/header'
 import Input from './components/input'
 import AddPerson from './components/addPerson'
 import Persons from './components/persons'
+import Notification from './components/notification'
 
 class App extends React.Component {
   constructor(props) {
@@ -13,7 +15,8 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      message: null
     }
   }
 
@@ -38,10 +41,13 @@ class App extends React.Component {
         personService
           .update(current.id, newPerson)
           .then(response => {
-            
             this.setState({
-              persons: this.state.persons.map(person => person.id === current.id ? newPerson : person)
+              persons: this.state.persons.map(person => person.id === current.id ? newPerson : person),
+              message: "Puhelinnumero henkilölle " + newPerson.name + " päivitetty"
             })
+            setTimeout(() => {
+              this.setState({ message: null })
+            }, 5000)
           })
       }
     } else {
@@ -51,8 +57,12 @@ class App extends React.Component {
           this.setState({
             persons: this.state.persons.concat(response),
             newName: '',
-            newNumber: ''
+            newNumber: '',
+            message: "Lisättiin " + newPerson.name
           })
+          setTimeout(() => {
+            this.setState({ message: null })
+          }, 5000)
         })
     }
   }
@@ -64,7 +74,13 @@ class App extends React.Component {
         personService
           .remove(id)
           .then(() => {
-            this.setState({ persons: this.state.persons.filter(person => person.id !== id) })
+            this.setState({
+              persons: this.state.persons.filter(person => person.id !== id),
+              message: "Poistettiin " + candidate.name
+            })
+            setTimeout(() => {
+              this.setState({ message: null })
+            }, 5000)
           })
       }
     }
@@ -89,6 +105,7 @@ class App extends React.Component {
     return (
       <div>
         <Header level={1} text="Puhelinluettelo" />
+        <Notification message={this.state.message} />
         <Input label="rajaa näytettäviä" value={this.state.filter} handleChange={this.handleFilterChange} />
         <AddPerson
           newName={this.state.newName}
