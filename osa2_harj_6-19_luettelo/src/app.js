@@ -46,6 +46,19 @@ class App extends React.Component {
     }
   }
 
+  deletePerson = (id) => {
+    return () => {
+      let candidate = this.state.persons.find(person => person.id === id)
+      if (candidate && window.confirm("poistetaanko " + candidate.name)) {
+        personService
+          .remove(id)
+          .then(() => {
+            this.setState({ persons: this.state.persons.filter(person => person.id !== id) })
+          })
+      }
+    }
+  }
+
   handleNameChange = (name) => {
     this.setState({ newName: name })
   }
@@ -73,7 +86,7 @@ class App extends React.Component {
           handleNumberChange={this.handleNumberChange}
           handleSubmit={this.addPerson}
         />
-        <Persons persons={personsToShow} />
+        <Persons persons={personsToShow} deletePerson={this.deletePerson} />
       </div>
     )
   }
