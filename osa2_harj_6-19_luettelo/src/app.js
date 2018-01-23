@@ -27,13 +27,24 @@ class App extends React.Component {
 
   addPerson = (event) => {
     event.preventDefault()
-    if (this.state.persons.find(person => person.name === this.state.newName)) {
-      alert(this.state.newName + " on jo luettelossa!")
-    } else {
-      const newPerson = {
-        name: this.state.newName,
-        number: this.state.newNumber
+    const newPerson = {
+      name: this.state.newName,
+      number: this.state.newNumber
+    }
+    let current = this.state.persons.find(person => person.name === this.state.newName)
+    if (current) {
+      if (window.confirm(this.state.newName + " on jo luettelossa, korvataanko vanha numero uudella?")) {
+        newPerson.id = current.id
+        personService
+          .update(current.id, newPerson)
+          .then(response => {
+            
+            this.setState({
+              persons: this.state.persons.map(person => person.id === current.id ? newPerson : person)
+            })
+          })
       }
+    } else {
       personService
         .create(newPerson)
         .then(response => {
