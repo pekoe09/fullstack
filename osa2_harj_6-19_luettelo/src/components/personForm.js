@@ -3,9 +3,9 @@ import Header from './header'
 import Input from './input'
 import Button from './button'
 
-const AddPerson = (props) => (
+const PersonForm = (props) => (
   <div>
-    <Header level={2} text="Lisää uusi" />
+    <Header level={2} text="Lisää uusi / muuta olemassaolevan numero" />
     <form onSubmit={props.handleSubmit}>
       <Input label="nimi" value={props.newName} handleChange={props.handleNameChange} />
       <Input label="numero" value={props.newNumber} handleChange={props.handleNumberChange} />
@@ -14,4 +14,4 @@ const AddPerson = (props) => (
   </div>
 )
 
-export default AddPerson
+export default PersonForm

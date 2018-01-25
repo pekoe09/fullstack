@@ -4,7 +4,7 @@ import './index.css'
 
 import Header from './components/header'
 import Input from './components/input'
-import AddPerson from './components/addPerson'
+import PersonForm from './components/personForm'
 import Persons from './components/persons'
 import Notification from './components/notification'
 
@@ -28,43 +28,56 @@ class App extends React.Component {
       })
   }
 
-  addPerson = (event) => {
+  savePerson = (event) => {
     event.preventDefault()
     const newPerson = {
       name: this.state.newName,
       number: this.state.newNumber
     }
     let current = this.state.persons.find(person => person.name === this.state.newName)
-    if (current) {
-      if (window.confirm(this.state.newName + " on jo luettelossa, korvataanko vanha numero uudella?")) {
-        newPerson.id = current.id
-        personService
-          .update(current.id, newPerson)
-          .then(response => {
-            this.setState({
-              persons: this.state.persons.map(person => person.id === current.id ? newPerson : person),
-              message: "Puhelinnumero henkilölle " + newPerson.name + " päivitetty"
-            })
-            setTimeout(() => {
-              this.setState({ message: null })
-            }, 5000)
-          })
-      }
+    if (current && window.confirm(this.state.newName + " on jo luettelossa, korvataanko vanha numero uudella?")) {
+      newPerson.id = current.id
+      this.updatePerson(newPerson)
     } else {
-      personService
-        .create(newPerson)
-        .then(response => {
-          this.setState({
-            persons: this.state.persons.concat(response),
-            newName: '',
-            newNumber: '',
-            message: "Lisättiin " + newPerson.name
-          })
-          setTimeout(() => {
-            this.setState({ message: null })
-          }, 5000)
-        })
+      this.insertPerson(newPerson)
     }
+  }
+
+  insertPerson = (newPerson) => {
+    personService
+      .create(newPerson)
+      .then(response => {
+        this.setState({
+          persons: this.state.persons.concat(response),
+          newName: '',
+          newNumber: '',
+          message: "Lisättiin " + newPerson.name
+        })
+        setTimeout(() => {
+          this.setState({ message: null })
+        }, 5000)
+      })
+  }
+
+  updatePerson = (newPerson) => {
+    personService
+      .update(newPerson.id, newPerson)
+      .then(response => {
+        this.setState({
+          persons: this.state.persons.map(person => person.id === newPerson.id ? newPerson : person),
+          message: "Puhelinnumero henkilölle " + newPerson.name + " päivitetty"
+        })
+        setTimeout(() => {
+          this.setState({ message: null })
+        }, 5000)
+      })
+      .catch(error => {
+        console.log("virhe havaittu!")
+        this.setState({
+          persons: this.state.persons.filter(person => person.id !== newPerson.id)
+        })
+        this.insertPerson(newPerson)
+      })
   }
 
   deletePerson = (id) => {
@@ -107,12 +120,12 @@ class App extends React.Component {
         <Header level={1} text="Puhelinluettelo" />
         <Notification message={this.state.message} />
         <Input label="rajaa näytettäviä" value={this.state.filter} handleChange={this.handleFilterChange} />
-        <AddPerson
+        <PersonForm
           newName={this.state.newName}
           newNumber={this.state.newNumber}
           handleNameChange={this.handleNameChange}
           handleNumberChange={this.handleNumberChange}
-          handleSubmit={this.addPerson}
+          handleSubmit={this.savePerson}
         />
         <Persons persons={personsToShow} deletePerson={this.deletePerson} />
       </div>
