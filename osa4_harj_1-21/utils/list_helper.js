@@ -24,8 +24,31 @@ const favoriteBlog = (blogs) => {
   return favorite
 }
 
+const mostBlogs = (blogs) => {
+  const authors = {}
+  blogs.forEach(blog => {
+    if (authors[blog.author]) {
+      authors[blog.author] = authors[blog.author] + 1
+    } else {
+      authors[blog.author] = 1
+    }
+  })
+  let wordiest = {
+    author: Object.keys(authors)[0],
+    blogs: authors[Object.keys(authors)[0]]
+  }
+  Object.keys(authors).forEach((key) => {
+    if (wordiest.blogs < authors[key]) {
+      wordiest.author = key,
+      wordiest.blogs = authors[key]
+    }
+  })
+  return wordiest.author ? wordiest : null
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
