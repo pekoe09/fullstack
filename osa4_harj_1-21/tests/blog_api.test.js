@@ -73,6 +73,24 @@ describe('POST /api/blogs', () => {
     expect(titles).toContain(newBlog.title)
   })
 
+  test('sets likes default value 0', async () => {
+    const newBlog = {
+      title: 'Test blog 1',
+      author: 'Test author 1',
+      url: '/blog/inabog'
+    }
+
+    const result = await api
+      .post('/api/blogs')
+      .send(newBlog)
+
+    const storedBlogs = await api.get('/api/blogs')
+    const match = storedBlogs.body.find(blog => blog._id === result.body._id)    
+
+    expect(result.body.likes).toBe(0)
+    expect(match.likes).toBe(0)
+  })
+
 })
 
 afterAll(() => {
