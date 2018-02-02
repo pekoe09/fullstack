@@ -85,10 +85,72 @@ describe('POST /api/blogs', () => {
       .send(newBlog)
 
     const storedBlogs = await api.get('/api/blogs')
-    const match = storedBlogs.body.find(blog => blog._id === result.body._id)    
+    const match = storedBlogs.body.find(blog => blog._id === result.body._id)
 
     expect(result.body.likes).toBe(0)
     expect(match.likes).toBe(0)
+  })
+
+  test('does not accept blog without title', async () => {
+    const newBlog = {
+      author: 'Test author 1',
+      url: '/blog/inabog'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(blogs.length)
+  })
+
+  test('does not accept blog with empty string title', async () => {
+    const newBlog = {
+      title: '',
+      author: 'Test author 1',
+      url: '/blog/inabog'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(blogs.length)
+  })
+
+  test('does not accept blog without url', async () => {
+    const newBlog = {
+      title: 'Test blog 1',
+      author: 'Test author 1'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(blogs.length)
+  })
+
+  test('does not accept blog with empty string url', async () => {
+    const newBlog = {
+      title: 'Test  blog 1',
+      author: 'Test author 1',
+      url: ''
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(blogs.length)
   })
 
 })
