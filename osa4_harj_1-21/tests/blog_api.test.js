@@ -42,6 +42,39 @@ describe('GET /api/blogs', () => {
   })
 })
 
+describe('POST /api/blogs', () => {
+
+  beforeEach(async () => {
+    await Blog.remove({})
+
+    const blogObjects = blogs.map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
+  })
+
+  test('adds a blog', async () => {
+    const newBlog = {
+      title: 'Test blog 1',
+      author: 'Test author 1',
+      url: '/blog/inabog',
+      likes: 13
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const titles = response.body.map(r => r.title)
+
+    expect(response.body.length).toBe(blogs.length + 1)
+    expect(titles).toContain(newBlog.title)
+  })
+
+})
+
 afterAll(() => {
   server.close()
 })
