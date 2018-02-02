@@ -77,9 +77,18 @@ const blogsInDb = async () => {
   return blogs.map(format)
 }
 
+const resetDb = async () => {
+  await Blog.remove({})
+
+  const blogObjects = initialBlogs.map(blog => new Blog(blog))
+  const promiseArray = blogObjects.map(blog => blog.save())
+  await Promise.all(promiseArray)
+}
+
 module.exports = {
   initialBlogs,
   format,
   nonExistingId,
-  blogsInDb
+  blogsInDb,
+  resetDb
 }

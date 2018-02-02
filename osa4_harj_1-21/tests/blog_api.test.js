@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const { initialBlogs, format, blogsInDb } = require('./test_helper')
+const { initialBlogs, blogsInDb, resetDb, nonExistingId } = require('./test_helper')
 
 describe('GET /api/blogs', () => {
 
@@ -160,6 +160,44 @@ describe('POST /api/blogs', () => {
       .expect(400)
 
     const blogsAfter = await blogsInDb()
+    expect(blogsAfter.length).toBe(blogsBefore.length)
+  })
+
+})
+
+describe('DELETE /api/blogs/:id', () => {
+
+  beforeEach(async () => {
+    await resetDb()
+  })
+
+  test('removes a blog', async () => {
+    const blogsBefore = await blogsInDb()
+    const targetId = blogsBefore[2].id
+
+    await api
+      .delete(`/api/blogs/${targetId}`)
+      .expect(204)
+
+    const blogsAfter = await blogsInDb()
+    const ids = blogsAfter.map(b => b.id)
+    const ids2 = blogsBefore.map(b => b.id)
+
+    expect(blogsAfter.length).toBe(blogsBefore.length - 1)
+    expect(ids2).toContain(targetId)
+    expect(ids).not.toContain(targetId)
+  })
+
+  test('returns 204 for non-existing id, too', async () => {
+    const blogsBefore = await blogsInDb()
+    const targetId = await nonExistingId()
+
+    await api
+      .delete(`/api/blogs/${targetId}`)
+      .expect(204)
+
+    const blogsAfter = await blogsInDb()
+
     expect(blogsAfter.length).toBe(blogsBefore.length)
   })
 
