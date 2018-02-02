@@ -203,6 +203,47 @@ describe('DELETE /api/blogs/:id', () => {
 
 })
 
+describe('PUT /api/notes/:id', () => {
+
+  test('updates an existing blog correctly', async () => {
+    const blogsBefore = await blogsInDb()
+    const target = blogsBefore[2]
+    target.title = 'Updated title'
+    target.author = 'Updated author'
+    target.url = 'Updated url'
+    target.likes = 1000
+
+    await api
+      .put(`/api/blogs/${target.id}`)
+      .send(target)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfter = await blogsInDb()
+    const match = blogsAfter.find(b => b.id.toString() === target.id.toString())
+
+    expect(blogsAfter.length).toBe(blogsBefore.length)
+    expect(match).toEqual(target)
+  })
+
+  test('returns 400 for non-existing id', async () => {
+    const blogsBefore = await blogsInDb()
+    const fakeId = await nonExistingId()
+    const target = blogsBefore[2]
+    target.id = fakeId
+
+    await api
+      .put(`/api/blogs/${fakeId}`)
+      .send(target)
+      .expect(400)
+
+    const blogsAfter = await blogsInDb()
+
+    expect(blogsAfter.length).toBe(blogsBefore.length)
+  })
+
+})
+
 afterAll(() => {
   server.close()
 })
