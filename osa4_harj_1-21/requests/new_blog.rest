@@ -1,5 +1,6 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI1YTc0OTdiNDFkNGY0ZTZkOWZhYTk5YzYiLCJpYXQiOjE1MTc3NTM3NTh9.zE3Kv7VB0XORICLq_ppgelG7wiEymoOzpiAyOG_igz4
 
 {
   "title": "juttu1",

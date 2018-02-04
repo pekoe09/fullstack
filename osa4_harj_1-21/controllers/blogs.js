@@ -1,6 +1,15 @@
 const blogsRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
+
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -10,30 +19,48 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
+  const body = request.body
 
-  if (!blog.title || !blog.url) {
-    return response.status(400).json({ error: 'mandatory fields missing' })
+  try {
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    if (!body.title) {
+      return response.status(400).json({ error: 'title is mandatory' })
+    }
+
+    if (!body.url) {
+      return response.status(400).json({ error: 'url is mandatory' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes === undefined ? 0 : body.likes,
+      user: user._id
+    })
+
+    const savedBlog = await blog.save()
+
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+
+    response.status(201).json(Blog.format(savedBlog))
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError') {
+      response.status(401).json({ error: exception.message })
+    } else {
+      console.log(exception)
+      response.status(500).json({ error: 'encountered an error' })
+    }
   }
-
-  if (!blog.likes) {
-    blog.likes = 0
-  }
-
-  let users = await User.find({})
-  const user = users[0]
-  blog.user = user._id
-
-  const savedBlog = await blog.save()
-
-  user.blogs = user.blogs.concat(savedBlog._id)
-  users = await User.find({})
-  console.log(users)
-  console.log('Updated user:')
-  console.log(user)
-  await user.save()
-
-  response.status(201).json(Blog.format(savedBlog))
 })
 
 blogsRouter.put('/:id', async (request, response) => {
