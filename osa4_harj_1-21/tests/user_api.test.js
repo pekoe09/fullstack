@@ -76,5 +76,141 @@ describe('POST /api/users', () => {
     expect(usersAfter.length).toBe(usersBefore.length + 1)
     expect(usernames).toContain(newUser.username)
   })
-  
+
+  test('sets isAdult default to true', async () => {
+    const newUser = {
+      username: 'Newuser',
+      password: 'xyz123%?',
+      name: 'New User'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+
+    const usersInDatabase = await usersInDb()
+    const match = usersInDatabase.find(u => u.id.toString() === result.body._id)
+
+    expect(result.body.isAdult).toBe(true)
+    expect(match.isAdult).toBe(true)
+  })
+
+  test('does not accept user without a username', async () => {
+    const newUser = {
+      password: 'xyz123%?',
+      name: 'New User',
+      isAdult: true
+    }
+
+    const usersBefore = await usersInDb()
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(response.body).toEqual({ error: 'username is missing' })
+  })
+
+  test('does not accept user with an empty string a the username', async () => {
+    const newUser = {
+      username: '',
+      password: 'xyz123%?',
+      name: 'New User',
+      isAdult: true
+    }
+
+    const usersBefore = await usersInDb()
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(response.body).toEqual({ error: 'username is missing' })
+  })
+
+  test('does not accept user with an existing username', async () => {
+    const newUser = {
+      username: initialUsers[0].username,
+      password: 'xyz123%?',
+      name: 'New User',
+      isAdult: true
+    }
+
+    const usersBefore = await usersInDb()
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(response.body).toEqual({ error: 'username is already in use' })
+  })
+
+  test('does not accept user without a password', async () => {
+    const newUser = {
+      username: 'Newuser',
+      name: 'New User',
+      isAdult: true
+    }
+
+    const usersBefore = await usersInDb()
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length),
+    expect(response.body).toEqual({ error: 'password is missing' })
+  })
+
+  test('does not accept user with an empty string as the password', async () => {
+    const newUser = {
+      username: 'Newuser',
+      password: '',
+      name: 'New User',
+      isAdult: true
+    }
+
+    const usersBefore = await usersInDb()
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length),
+    expect(response.body).toEqual({ error: 'password is missing' })
+  })
+
+  test('does not accept user with a password shorter than 3 chars', async () => {
+    const newUser = {
+      username: 'Newuser',
+      password: 'x1',
+      name: 'New User',
+      isAdult: true
+    }
+
+    const usersBefore = await usersInDb()
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length),
+    expect(response.body).toEqual({ error: 'password is shorter than 3 chars' })
+  })
+
 })

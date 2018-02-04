@@ -11,6 +11,24 @@ usersRouter.post('/', async (request, response) => {
   try {
     const body = request.body
 
+    if (!body.username) {
+      return response.status(400).json({ error: 'username is missing' })
+    }
+    const match = await User.find({ username: body.username })
+    console.log(match)
+    if (match.length > 0) {
+      return response.status(400).json({ error: 'username is already in use' })
+    }
+    if (!body.password) {
+      return response.status(400).json({ error: 'password is missing' })
+    }
+    if (body.password.length < 3) {
+      return response.status(400).json({ error: 'password is shorter than 3 chars' })
+    }
+    if (body.isAdult === undefined) {
+      body.isAdult = true
+    }
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
