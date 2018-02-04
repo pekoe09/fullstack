@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const User = require('../models/user')
-const { initialUsers, usersInDb, resetDb } = require('./test_helper')
+const { initialUsers, usersInDb } = require('./test_helper')
 
 describe('GET /api/users', () => {
 
@@ -212,8 +212,8 @@ describe('POST /api/users', () => {
     expect(usersAfter.length).toBe(usersBefore.length)
     expect(response.body).toEqual({ error: 'password is shorter than 3 chars' })
   })
-  
-  afterAll(() => {
-    server.close()
-  })
+})
+
+afterAll(() => {
+  server.close()
 })

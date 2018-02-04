@@ -1,6 +1,5 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
 
 const initialBlogs = [
   {
@@ -101,26 +100,11 @@ const usersInDb = async () => {
   return users
 }
 
-const resetDb = async () => {
-  await Blog.remove({})
-  await User.remove({})
-
-  const blogObjects = initialBlogs.map(blog => new Blog(blog))
-  const promiseArray = blogObjects.map(blog => blog.save())
-  await Promise.all(promiseArray)
-
-  //initialUsers.forEach(async user => user.passwordHash = await bcrypt.hash(user.username, 10))
-  const userObjects = initialUsers.map(user => new User(user))
-  const userPromiseArray  = userObjects.map(user => user.save())
-  await Promise.all(userPromiseArray)
-}
-
 module.exports = {
   initialBlogs,
   initialUsers,
   format,
   nonExistingId,
   blogsInDb,
-  usersInDb,
-  resetDb
+  usersInDb
 }

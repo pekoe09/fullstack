@@ -2,8 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const { initialBlogs, initialUsers, blogsInDb, resetDb, nonExistingId } = require('./test_helper')
+const { initialBlogs, blogsInDb, nonExistingId } = require('./test_helper')
 
 describe('GET /api/blogs', () => {
 
@@ -13,12 +12,7 @@ describe('GET /api/blogs', () => {
     const blogObjects = initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
-    //await resetDb()
   })
-
-  // afterAll(async () => {
-  //   await resetDb()
-  // })
 
   test('works', async () => {
     await api
@@ -261,8 +255,8 @@ describe('PUT /api/notes/:id', () => {
 
     expect(blogsAfter.length).toBe(blogsBefore.length)
   })
-  
-  afterAll(() => {
-    server.close()
-  })
+})
+
+afterAll(() => {
+  server.close()
 })

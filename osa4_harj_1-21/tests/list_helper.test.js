@@ -1,3 +1,4 @@
+const { server } = require('../index')
 const listHelper = require('../utils/list_helper')
 const blogs = require('./testblogs')
 
@@ -82,4 +83,8 @@ describe('mostLikes', () => {
       likes: 17
     })
   })
+})
+
+afterAll(() => {
+  server.close()
 })
