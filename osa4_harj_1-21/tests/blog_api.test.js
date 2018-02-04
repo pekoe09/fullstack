@@ -40,6 +40,7 @@ describe('GET /api/blogs', () => {
 
     initialBlogs.forEach(blog => expect(response.body).toContainEqual(blog))
   })
+
 })
 
 describe('POST /api/blogs', () => {
@@ -205,6 +206,10 @@ describe('DELETE /api/blogs/:id', () => {
 
 describe('PUT /api/notes/:id', () => {
 
+  beforeEach(async () => {
+    await resetDb()
+  })
+
   test('updates an existing blog correctly', async () => {
     const blogsBefore = await blogsInDb()
     const target = blogsBefore[2]
@@ -242,8 +247,4 @@ describe('PUT /api/notes/:id', () => {
     expect(blogsAfter.length).toBe(blogsBefore.length)
   })
 
-})
-
-afterAll(() => {
-  server.close()
 })
