@@ -55,14 +55,18 @@ const initialBlogs = [
 
 const initialUsers = [
   {
+    _id: '5a422bc61b54a676234d1763',
     username: 'Testuser1',
     name: 'Test User 1',
-    isAdult: true
+    isAdult: true,
+    blogs: []
   },
   {
-    username: 'Testuser1',
-    name: 'Test User 1',
-    isAdult: true
+    _id: '5a422bc61b54a676234d1764',
+    username: 'Testuser2',
+    name: 'Test User 2',
+    isAdult: false,
+    blogs: []
   }
 ]
 
@@ -99,16 +103,16 @@ const usersInDb = async () => {
 
 const resetDb = async () => {
   await Blog.remove({})
-  //await User.remove({})
+  await User.remove({})
 
   const blogObjects = initialBlogs.map(blog => new Blog(blog))
-  let promiseArray = blogObjects.map(blog => blog.save())
+  const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
 
-  // initialUsers.forEach(async user => user.passwordHash = await bcrypt.hash(user.username, 10))
-  // const userObjects = initialUsers.map(user => new User(user))
-  // promiseArray = userObjects.map(user => user.save())
-  // await Promise.all(promiseArray)
+  //initialUsers.forEach(async user => user.passwordHash = await bcrypt.hash(user.username, 10))
+  const userObjects = initialUsers.map(user => new User(user))
+  const userPromiseArray  = userObjects.map(user => user.save())
+  await Promise.all(userPromiseArray)
 }
 
 module.exports = {

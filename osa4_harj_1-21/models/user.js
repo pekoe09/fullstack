@@ -4,7 +4,11 @@ const userSchema = new mongoose.Schema({
   username: String,
   passwordHash: String,
   name: String,
-  isAdult: Boolean
+  isAdult: Boolean,
+  blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }]
+},
+{
+  versionKey: false
 })
 
 userSchema.statics.format = (user) => {
@@ -12,7 +16,8 @@ userSchema.statics.format = (user) => {
     id: user._id,
     username: user.username,
     name: user.name,
-    isAdult: user.isAdult
+    isAdult: true,
+    blogs: user.blogs
   }
 }
 

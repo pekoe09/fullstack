@@ -1,9 +1,12 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
-  response.json(blogs)
+  const blogs = await Blog
+    .find({})
+    .populate('user', { _id: 1, username: 1, name: 1 })
+  response.json(blogs.map(Blog.format))
 })
 
 blogsRouter.post('/', async (request, response) => {
@@ -17,8 +20,20 @@ blogsRouter.post('/', async (request, response) => {
     blog.likes = 0
   }
 
-  const result = await blog.save()
-  response.status(201).json(result)
+  let users = await User.find({})
+  const user = users[0]
+  blog.user = user._id
+
+  const savedBlog = await blog.save()
+
+  user.blogs = user.blogs.concat(savedBlog._id)
+  users = await User.find({})
+  console.log(users)
+  console.log('Updated user:')
+  console.log(user)
+  await user.save()
+
+  response.status(201).json(Blog.format(savedBlog))
 })
 
 blogsRouter.put('/:id', async (request, response) => {
@@ -31,11 +46,11 @@ blogsRouter.put('/:id', async (request, response) => {
       likes: body.likes
     }
     const match = await Blog.findById(request.params.id)
-    if(!match) {
+    if (!match) {
       return response.status(400).send({ error: 'nonexistent id' })
     }
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-    response.json(updatedBlog)
+    response.json(Blog.format(updatedBlog))
   } catch (exception) {
     console.log(exception)
     response.status(400).send({ error: 'malformatted id' })

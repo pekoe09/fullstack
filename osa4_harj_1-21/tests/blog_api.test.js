@@ -2,7 +2,8 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const { initialBlogs, blogsInDb, resetDb, nonExistingId } = require('./test_helper')
+const User = require('../models/user')
+const { initialBlogs, initialUsers, blogsInDb, resetDb, nonExistingId } = require('./test_helper')
 
 describe('GET /api/blogs', () => {
 
@@ -12,7 +13,12 @@ describe('GET /api/blogs', () => {
     const blogObjects = initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
+    //await resetDb()
   })
+
+  // afterAll(async () => {
+  //   await resetDb()
+  // })
 
   test('works', async () => {
     await api
@@ -38,7 +44,8 @@ describe('GET /api/blogs', () => {
     const response = await api
       .get('/api/blogs')
 
-    initialBlogs.forEach(blog => expect(response.body).toContainEqual(blog))
+    const titles = response.body.map(r => r.title)
+    initialBlogs.forEach(blog => expect(titles).toContain(blog.title))
   })
 
 })
@@ -88,7 +95,7 @@ describe('POST /api/blogs', () => {
       .send(newBlog)
 
     const blogsInDatabase = await blogsInDb()
-    const match = blogsInDatabase.find(b => b.id.toString() === result.body._id)
+    const match = blogsInDatabase.find(b => b.id.toString() === result.body.id)
 
     expect(result.body.likes).toBe(0)
     expect(match.likes).toBe(0)
@@ -169,7 +176,11 @@ describe('POST /api/blogs', () => {
 describe('DELETE /api/blogs/:id', () => {
 
   beforeEach(async () => {
-    await resetDb()
+    await Blog.remove({})
+
+    const blogObjects = initialBlogs.map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
   })
 
   test('removes a blog', async () => {
@@ -207,7 +218,11 @@ describe('DELETE /api/blogs/:id', () => {
 describe('PUT /api/notes/:id', () => {
 
   beforeEach(async () => {
-    await resetDb()
+    await Blog.remove({})
+
+    const blogObjects = initialBlogs.map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
   })
 
   test('updates an existing blog correctly', async () => {
@@ -246,5 +261,8 @@ describe('PUT /api/notes/:id', () => {
 
     expect(blogsAfter.length).toBe(blogsBefore.length)
   })
-
+  
+  afterAll(() => {
+    server.close()
+  })
 })

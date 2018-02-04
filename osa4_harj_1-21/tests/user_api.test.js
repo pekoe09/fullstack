@@ -169,7 +169,7 @@ describe('POST /api/users', () => {
       .expect(400)
 
     const usersAfter = await usersInDb()
-    expect(usersAfter.length).toBe(usersBefore.length),
+    expect(usersAfter.length).toBe(usersBefore.length)
     expect(response.body).toEqual({ error: 'password is missing' })
   })
 
@@ -189,7 +189,7 @@ describe('POST /api/users', () => {
       .expect(400)
 
     const usersAfter = await usersInDb()
-    expect(usersAfter.length).toBe(usersBefore.length),
+    expect(usersAfter.length).toBe(usersBefore.length)
     expect(response.body).toEqual({ error: 'password is missing' })
   })
 
@@ -209,8 +209,11 @@ describe('POST /api/users', () => {
       .expect(400)
 
     const usersAfter = await usersInDb()
-    expect(usersAfter.length).toBe(usersBefore.length),
+    expect(usersAfter.length).toBe(usersBefore.length)
     expect(response.body).toEqual({ error: 'password is shorter than 3 chars' })
   })
-
+  
+  afterAll(() => {
+    server.close()
+  })
 })
