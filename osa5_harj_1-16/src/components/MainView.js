@@ -2,7 +2,7 @@ import React from 'react'
 import BlogForm from './BlogForm'
 import Blog from './Blog'
 
-const MainView = ({ name, blogs, formVisible, title, author, url, handleLogout,
+const MainView = ({ name, blogs, user, formVisible, title, author, url, handleLogout,
   handleChange, handleSubmit, toggleBlogForm, handleLike, handleDelete }) => {
   const hideWhenVisible = { display: formVisible ? 'none' : '' }
   const showWhenVisible = { display: formVisible ? '' : 'none' }
@@ -30,6 +30,7 @@ const MainView = ({ name, blogs, formVisible, title, author, url, handleLogout,
           blog={blog} 
           handleLike={handleLike}
           handleDelete={handleDelete}
+          user={user}
         />
       )}
     </div>

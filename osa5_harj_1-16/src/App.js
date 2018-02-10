@@ -146,6 +146,7 @@ class App extends React.Component {
           : <MainView
             name={this.state.user.name}
             blogs={this.state.blogs}
+            user={this.state.user}
             formVisible={this.state.blogFormVisible}
             title={this.state.title}
             author={this.state.author}

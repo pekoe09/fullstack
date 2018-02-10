@@ -53,8 +53,11 @@ class Blog extends React.Component {
             {this.props.blog.likes} likes
             <button onClick={this.likeBlog}>like</button>
           </div>
-          <div>added by {this.props.blog.user.name}</div>
-          <div><button onClick={this.deleteBlog}>delete</button></div>
+          {this.props.blog.user && <div>added by {this.props.blog.user.name}</div>}
+          {!this.props.blog.user && <div>added by unknown</div>}
+          {(!this.props.blog.user || this.props.blog.user.username === this.props.user.username) 
+            && <div><button onClick={this.deleteBlog}>delete</button></div>
+          }
         </div>
       </div>
     )
