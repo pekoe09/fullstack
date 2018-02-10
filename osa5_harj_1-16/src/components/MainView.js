@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import BlogForm from './BlogForm'
 import Blog from './Blog'
 
@@ -38,3 +39,19 @@ const MainView = ({ name, blogs, user, formVisible, title, author, url, handleLo
 }
 
 export default MainView
+
+MainView.propTypes = {
+  name: PropTypes.string.isRequired,
+  blogs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.object.isRequired,
+  formVisible: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  toggleBlogForm: PropTypes.func.isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired
+}

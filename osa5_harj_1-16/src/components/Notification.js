@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 let notificationStyle = {
   borderStyle: 'solid',
@@ -31,3 +32,8 @@ const Notification = ({ message, error }) => {
 }
 
 export default Notification
+
+Notification.propTypes = {
+  message: PropTypes.string,
+  error: PropTypes.string
+}
