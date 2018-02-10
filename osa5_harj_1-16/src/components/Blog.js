@@ -19,6 +19,12 @@ class Blog extends React.Component {
     this.props.handleLike(blog)
   }
 
+  deleteBlog = () => {
+    if (window.confirm(`delete ${this.props.blog.title} by ${this.props.blog.author}?`)) {
+      this.props.handleDelete(this.props.blog)
+    }
+  }
+
   render() {
     const showWhenExpanded = {
       display: this.state.expanded ? '' : 'none'
@@ -41,13 +47,14 @@ class Blog extends React.Component {
         <div onClick={this.toggleExpansion}>
           {this.props.blog.title} {this.props.blog.author}
         </div>
-        <div style={{...showWhenExpanded, ...blogDetailsStyle}}>
+        <div style={{ ...showWhenExpanded, ...blogDetailsStyle }}>
           <div><a href={this.props.blog.url}>{this.props.blog.url}</a></div>
           <div>
             {this.props.blog.likes} likes
             <button onClick={this.likeBlog}>like</button>
           </div>
           <div>added by {this.props.blog.user.name}</div>
+          <div><button onClick={this.deleteBlog}>delete</button></div>
         </div>
       </div>
     )

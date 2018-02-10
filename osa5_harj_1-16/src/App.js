@@ -95,12 +95,30 @@ class App extends React.Component {
     try {
       await blogService.update(blog)
       const blogs = await blogService.getAll()
-      this.setState({ blogs })
+      this.setState({ 
+        blogs,
+        message: `updated likes on ${blog.title}`
+      })
     } catch (exception) {
       console.log(exception)
       this.setState({ error: 'could not like the blog' })
-      this.fadeNotification()
     }
+    this.fadeNotification()
+  }
+
+  deleteBlog = async (blog) => {
+    try {
+      await blogService.remove(blog.id)
+      const blogs = await blogService.getAll()
+      this.setState({ 
+        blogs,
+        message: `deleted blog ${blog.title}`
+      })
+    } catch (exception) {
+      console.log(exception)
+      this.setState({ error: 'could not delete the blog' })
+    }
+    this.fadeNotification()
   }
 
   toggleBlogForm = () => {
@@ -137,6 +155,7 @@ class App extends React.Component {
             handleSubmit={this.createBlog}
             toggleBlogForm={this.toggleBlogForm}
             handleLike={this.updateBlog}
+            handleDelete={this.deleteBlog}
           />
         }
       </div>
