@@ -12,6 +12,7 @@ class App extends React.Component {
       blogs: [],
       message: null,
       error: null,
+      blogFormVisible: false,
       username: '',
       password: '',
       user: null,
@@ -74,7 +75,7 @@ class App extends React.Component {
         author: this.state.author,
         url: this.state.url
       }
-      const response = await blogService.create(blog)
+      await blogService.create(blog)
       const blogs = await blogService.getAll()
       this.setState({
         blogs,
@@ -88,6 +89,11 @@ class App extends React.Component {
       this.setState({ error: 'could not create the blog' })
     }
     this.fadeNotification()
+  }
+
+  toggleBlogForm = () => {
+    const visible = !this.state.blogFormVisible
+    this.setState({ blogFormVisible: visible })
   }
 
   fadeNotification = () => {
@@ -110,12 +116,14 @@ class App extends React.Component {
           : <MainView
             name={this.state.user.name}
             blogs={this.state.blogs}
+            formVisible={this.state.blogFormVisible}
             title={this.state.title}
             author={this.state.author}
             url={this.state.url}
             handleLogout={this.logout}
             handleChange={this.handleFieldChange}
             handleSubmit={this.createBlog}
+            toggleBlogForm={this.toggleBlogForm}
           />
         }
       </div>
