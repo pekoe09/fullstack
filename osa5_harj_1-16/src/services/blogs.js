@@ -5,7 +5,15 @@ let token = null
 
 const getAll = () => {
   const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+  return request.then(response => response.data.sort((a, b) => {
+    if (a.likes < b.likes) {
+      return 1
+    }
+    if (a.likes > b.likes) {
+      return -1
+    }
+    return 0
+  }))
 }
 
 const setToken = (newToken) => {
