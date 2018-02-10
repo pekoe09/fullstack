@@ -16,6 +16,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user })
+    }
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
@@ -33,6 +38,7 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password
       })
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       this.setState({
         username: '',
         password: '',
@@ -48,6 +54,12 @@ class App extends React.Component {
     }
   }
 
+  logout = async (event) => {
+    console.log('Logging out')
+    window.localStorage.clear()
+    this.setState({ user: null })
+  }
+
   render() {
     return (
       <div>
@@ -61,6 +73,7 @@ class App extends React.Component {
           : <MainView
             name={this.state.user.name}
             blogs={this.state.blogs}
+            handleLogout={this.logout}
           />
         }
       </div>
