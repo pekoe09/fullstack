@@ -1,6 +1,7 @@
 import React from 'react'
 import MainView from './components/MainView'
 import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -9,6 +10,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       blogs: [],
+      message: null,
+      error: null,
       username: '',
       password: '',
       user: null,
@@ -45,49 +48,58 @@ class App extends React.Component {
       this.setState({
         username: '',
         password: '',
-        user
+        user,
+        message: `welcome to blog app, ${user.name}!`
       })
     } catch (exception) {
-      this.setState({
-        error: 'username or password is invalid'
-      })
-      setTimeout(() => {
-        this.setState({ error: null })
-      }, 5000)
+      this.setState({ error: 'username or password is invalid' })
     }
+    this.fadeNotification()
   }
 
   logout = async (event) => {
     window.localStorage.clear()
-    this.setState({ user: null })
+    this.setState({
+      user: null,
+      message: 'thanks for using the blog app - see you soon!'
+    })
+    this.fadeNotification()
   }
 
   createBlog = async (event) => {
     event.preventDefault()
-    console.log('Creating blog')
     try {
       const blog = {
         title: this.state.title,
         author: this.state.author,
         url: this.state.url
       }
-      await blogService.create(blog)
+      const response = await blogService.create(blog)
       const blogs = await blogService.getAll()
       this.setState({
         blogs,
+        message: `a new blog '${blog.title}' by ${blog.author} added`,
         title: '',
         author: '',
         url: ''
       })
     } catch (exception) {
       console.log(exception)
+      this.setState({ error: 'could not create the blog' })
     }
+    this.fadeNotification()
+  }
 
+  fadeNotification = () => {
+    setTimeout(() => {
+      this.setState({ message: null, error: null })
+    }, 5000);
   }
 
   render() {
     return (
       <div>
+        <Notification message={this.state.message} error={this.state.error} />
         {this.state.user === null ?
           <LoginForm
             handleSubmit={this.login}
