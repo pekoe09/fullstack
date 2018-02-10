@@ -11,7 +11,10 @@ class App extends React.Component {
       blogs: [],
       username: '',
       password: '',
-      user: null
+      user: null,
+      title: '',
+      author: '',
+      url: ''
     }
   }
 
@@ -26,19 +29,19 @@ class App extends React.Component {
     )
   }
 
-  handleLoginFieldChange = (event) => {
+  handleFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
   login = async (event) => {
     event.preventDefault()
-    console.log('Logging in: ', this.state.username, this.state.password)
     try {
       const user = await loginService.login({
         username: this.state.username,
         password: this.state.password
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       this.setState({
         username: '',
         password: '',
@@ -55,9 +58,31 @@ class App extends React.Component {
   }
 
   logout = async (event) => {
-    console.log('Logging out')
     window.localStorage.clear()
     this.setState({ user: null })
+  }
+
+  createBlog = async (event) => {
+    event.preventDefault()
+    console.log('Creating blog')
+    try {
+      const blog = {
+        title: this.state.title,
+        author: this.state.author,
+        url: this.state.url
+      }
+      await blogService.create(blog)
+      const blogs = await blogService.getAll()
+      this.setState({
+        blogs,
+        title: '',
+        author: '',
+        url: ''
+      })
+    } catch (exception) {
+      console.log(exception)
+    }
+
   }
 
   render() {
@@ -66,14 +91,19 @@ class App extends React.Component {
         {this.state.user === null ?
           <LoginForm
             handleSubmit={this.login}
-            handleChange={this.handleLoginFieldChange}
+            handleChange={this.handleFieldChange}
             username={this.state.username}
             password={this.state.password}
           />
           : <MainView
             name={this.state.user.name}
             blogs={this.state.blogs}
+            title={this.state.title}
+            author={this.state.author}
+            url={this.state.url}
             handleLogout={this.logout}
+            handleChange={this.handleFieldChange}
+            handleSubmit={this.createBlog}
           />
         }
       </div>
