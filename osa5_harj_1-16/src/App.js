@@ -91,6 +91,18 @@ class App extends React.Component {
     this.fadeNotification()
   }
 
+  updateBlog = async (blog) => {
+    try {
+      await blogService.update(blog)
+      const blogs = await blogService.getAll()
+      this.setState({ blogs })
+    } catch (exception) {
+      console.log(exception)
+      this.setState({ error: 'could not like the blog' })
+      this.fadeNotification()
+    }
+  }
+
   toggleBlogForm = () => {
     const visible = !this.state.blogFormVisible
     this.setState({ blogFormVisible: visible })
@@ -124,6 +136,7 @@ class App extends React.Component {
             handleChange={this.handleFieldChange}
             handleSubmit={this.createBlog}
             toggleBlogForm={this.toggleBlogForm}
+            handleLike={this.updateBlog}
           />
         }
       </div>
