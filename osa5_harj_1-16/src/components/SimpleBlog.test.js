@@ -17,4 +17,21 @@ describe('<SimpleBlog />', () => {
     expect(titleAuthorDiv.text()).toEqual(`${blog.title} ${blog.author}`)
     expect(likesDiv.text()).toEqual(`blog has ${blog.likes} likes`)
   })
+
+  it('clicking twice on like button calls event handler twice', () => {
+    const blog = {
+      title: 'Test Title',
+      author: 'Test Author',
+      likes: 7
+    }
+
+    const mockHandler = jest.fn()
+    const blogComponent = shallow(<SimpleBlog blog={blog} onClick={mockHandler}/>)
+
+    const button = blogComponent.find('button')
+    button.simulate('click')
+    button.simulate('click')
+
+    expect(mockHandler.mock.calls.length).toBe(2)
+  })
 })
