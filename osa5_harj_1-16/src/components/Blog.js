@@ -44,11 +44,11 @@ class Blog extends React.Component {
     }
 
     return (
-      <div style={blogStyle}>
-        <div onClick={this.toggleExpansion}>
+      <div style={blogStyle} className='blog'>
+        <div onClick={this.toggleExpansion} className='titleAuthor'>
           {this.props.blog.title} {this.props.blog.author}
         </div>
-        <div style={{ ...showWhenExpanded, ...blogDetailsStyle }}>
+        <div style={{ ...showWhenExpanded, ...blogDetailsStyle }} className='blogDetails'>
           <div><a href={this.props.blog.url}>{this.props.blog.url}</a></div>
           <div>
             {this.props.blog.likes} likes
@@ -56,7 +56,7 @@ class Blog extends React.Component {
           </div>
           {this.props.blog.user && <div>added by {this.props.blog.user.name}</div>}
           {!this.props.blog.user && <div>added by unknown</div>}
-          {(!this.props.blog.user || this.props.blog.user.username === this.props.user.username) 
+          {(!this.props.blog.user || this.props.blog.user.username === this.props.user.username)
             && <div><button onClick={this.deleteBlog}>delete</button></div>
           }
         </div>
