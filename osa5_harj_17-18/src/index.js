@@ -71,6 +71,7 @@ class App extends React.Component {
           getAverage={this.getAverage}
           getGoodShare={this.getGoodShare}
         />
+        <Button handleClick={e => store.dispatch({ type: 'RESET' })} btnText="nollaa tilasto" />
       </div>
     )
   }
