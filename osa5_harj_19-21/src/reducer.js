@@ -38,6 +38,8 @@ const reducer = (state = initialState, action) => {
           }
           return 0
         })
+    case 'ADD':
+      return state.concat({ ...action.data, id: getId() })
   }
 
   return state

@@ -10,6 +10,19 @@ class App extends React.Component {
     })
   }
 
+  create = (event) => {
+    event.preventDefault()
+    const content = event.target.anecdote.value
+    this.props.store.dispatch({
+      type: 'ADD',
+      data: {
+        content,
+        votes: 0
+      }
+    })
+    event.target.anecdote.value = ''
+  }
+
   render() {
     const anecdotes = this.props.store.getState()
     return (
@@ -27,8 +40,8 @@ class App extends React.Component {
           </div>
         )}
         <h2>create new</h2>
-        <form>
-          <div><input /></div>
+        <form onSubmit={this.create}>
+          <div><input name='anecdote' /></div>
           <button>create</button>
         </form>
       </div>
