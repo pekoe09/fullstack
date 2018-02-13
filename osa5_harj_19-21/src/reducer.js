@@ -24,10 +24,20 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
   switch (action.type) {
     case 'VOTE':
-      return state.map(a =>
-        a.id !== action.data.id
-          ? a
-          : { ...a, votes: a.votes + 1 })
+      return state
+        .map(a =>
+          a.id !== action.data.id
+            ? a
+            : { ...a, votes: a.votes + 1 })
+        .sort((a, b) => {
+          if (a.votes < b.votes) {
+            return 1
+          }
+          if (a.votes > b.votes) {
+            return -1
+          }
+          return 0
+        })
   }
 
   return state
