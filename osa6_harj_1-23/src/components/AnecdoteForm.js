@@ -12,7 +12,7 @@ class AnecdoteForm extends React.Component {
 
     this.props.store.dispatch(notificationSetting(`you added '${content}'`))
     setTimeout(() => {
-      this.props.store.dispatch(notificationClearing)
+      this.props.store.dispatch(notificationClearing())
     }, 5000)
   }
   render() {
