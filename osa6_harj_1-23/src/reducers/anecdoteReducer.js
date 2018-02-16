@@ -1,9 +1,7 @@
 const anecdoteReducer = (store = [], action) => {
   switch (action.type) {
     case 'VOTE': {
-      const old = store.filter(a => a.id !== action.id)
-      const voted = store.find(a => a.id === action.id)
-      return [...old, { ...voted, votes: voted.votes + 1 }]
+      return store.map(a => a.id === action.data.id ? action.data : a)
     }
     case 'CREATE':
       return store.concat(action.data)
@@ -21,10 +19,10 @@ export const anecdoteCreation = (data) => {
   }
 }
 
-export const anecdoteVoting = (id) => {
+export const anecdoteVoting = (data) => {
   return {
     type: 'VOTE',
-    id
+    data
   }
 }
 
