@@ -1,6 +1,11 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
-import { Container, Table, Grid, Image } from 'semantic-ui-react'
+import { Container, Table, Grid, Image, Form, Button } from 'semantic-ui-react'
+
+const headerStyle = {
+  marginTop: 20,
+  color: 'navy'
+}
 
 const menuStyle = {
   backgroundColor: 'lightblue',
@@ -52,7 +57,7 @@ const Notification = ({ notification }) => (
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
-    <h2>Anecdotes</h2>
+    <h2 style={headerStyle}>Anecdotes</h2>
     <Table striped celled>
       <Table.Body>
         {anecdotes.map(anecdote =>
@@ -69,23 +74,31 @@ const AnecdoteList = ({ anecdotes }) => (
 
 const Anecdote = ({ anecdote }) => (
   <div>
-    <h2>{anecdote.content} by {anecdote.author}</h2>
+    <h2 style={headerStyle}>{anecdote.content} by {anecdote.author}</h2>
     <div>has {anecdote.votes} votes</div>
     <div>for more info see <a href={anecdote.info}>{anecdote.info}</a></div>
   </div>
 )
 
+const quoteStyle = {
+  paddingLeft: 30,
+  marginTop: 10,
+  marginBottom: 10,
+  fontStyle: 'italic',
+  fontSize: 12
+}
+
 const About = () => (
   <div>
-    <h2>About anecdote app</h2>
+    <h2 style={headerStyle}>About anecdote app</h2>
     <Grid columns={16}>
       <Grid.Column width={12}>
         <p>According to Wikipedia:</p>
 
-        <em>An anecdote is a brief, revealing account of an individual person or an incident.
+        <div style={quoteStyle}>An anecdote is a brief, revealing account of an individual person or an incident.
           Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself,
           such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative.
-      An anecdote is "a story with a point."</em>
+      An anecdote is "a story with a point."</div>
 
         <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
       </Grid.Column>
@@ -97,8 +110,12 @@ const About = () => (
   </div>
 )
 
+const footerStyle = {
+  marginTop: 10
+}
+
 const Footer = () => (
-  <div>
+  <div style={footerStyle}>
     Anecdote app for <a href='https://courses.helsinki.fi/fi/TKT21009/121540749'>Full Stack -sovelluskehitys</a>.
 
     See <a href='https://github.com/mluukkai/routed-anecdotes'>https://github.com/mluukkai/routed-anecdotes</a> for the source code.
@@ -134,22 +151,22 @@ class CreateNew extends React.Component {
   render() {
     return (
       <div>
-        <h2>create a new anecdote</h2>
-        <form onSubmit={this.handleSubmit}>
-          <div>
+        <h2 style={headerStyle}>Create a new anecdote</h2>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Field>
             content
             <input name='content' value={this.state.content} onChange={this.handleChange} />
-          </div>
-          <div>
+          </Form.Field>
+          <Form.Field>
             author
             <input name='author' value={this.state.author} onChange={this.handleChange} />
-          </div>
-          <div>
+          </Form.Field>
+          <Form.Field>
             url for more info
             <input name='info' value={this.state.info} onChange={this.handleChange} />
-          </div>
-          <button>create</button>
-        </form>
+          </Form.Field>
+          <Button primary>create</Button>
+        </Form>
       </div>
     )
 
