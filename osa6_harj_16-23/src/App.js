@@ -9,9 +9,25 @@ const Menu = () => (
   </div>
 )
 
+const notificationStyle = {
+  borderStyle: 'solid',
+  borderColor: 'green',
+  borderWidth: 1,
+  borderRadius: 4,
+  color: 'green',
+  marginTop: 5,
+  marginBottom: 5,
+  padding: 10
+}
+
 const Notification = ({ notification }) => (
   <div>
-    {notification}
+    {
+      notification &&
+      <div style={notificationStyle}>
+        {notification}
+      </div>
+    }
   </div>
 )
 
