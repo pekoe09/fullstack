@@ -5,6 +5,7 @@ import BlogForm from './BlogForm'
 import Blog from './Blog'
 import User from './User'
 import Users from './Users'
+import NavBar from './NavBar'
 
 class MainView extends React.Component {
 
@@ -20,8 +21,8 @@ class MainView extends React.Component {
 
     return (
       <div>
-        <h2>blogs</h2>
-        <p>{this.props.name} logged in <button onClick={this.props.handleLogout}>logout</button></p>
+        <h2>blog app</h2>
+        <NavBar name={this.props.name} handleLogout={this.props.handleLogout} />
         <div style={showWhenVisible}>
           <BlogForm
             title={this.props.title}
