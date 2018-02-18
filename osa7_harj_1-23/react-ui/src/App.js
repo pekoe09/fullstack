@@ -1,10 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
+
 import MainView from './components/MainView'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 import { setNotification } from './reducers/notificationReducer'
 
 class App extends React.Component {
@@ -18,7 +21,8 @@ class App extends React.Component {
       user: null,
       title: '',
       author: '',
-      url: ''
+      url: '',
+      users: []
     }
   }
 
@@ -30,6 +34,9 @@ class App extends React.Component {
     }
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
+    )
+    userService.getAll().then(users =>
+      this.setState({ users })
     )
   }
 
@@ -46,6 +53,7 @@ class App extends React.Component {
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
+      userService.setToken(user.token)
       this.setState({
         username: '',
         password: '',
@@ -124,32 +132,38 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <Notification message={this.state.message} error={this.state.error} />
-        {this.state.user === null ?
-          <LoginForm
-            handleSubmit={this.login}
-            handleChange={this.handleFieldChange}
-            username={this.state.username}
-            password={this.state.password}
-          />
-          : <MainView
-            name={this.state.user.name}
-            blogs={this.state.blogs}
-            user={this.state.user}
-            formVisible={this.state.blogFormVisible}
-            title={this.state.title}
-            author={this.state.author}
-            url={this.state.url}
-            handleLogout={this.logout}
-            handleChange={this.handleFieldChange}
-            handleSubmit={this.createBlog}
-            toggleBlogForm={this.toggleBlogForm}
-            handleLike={this.updateBlog}
-            handleDelete={this.deleteBlog}
-          />
-        }
-      </div>
+      <Router>
+        <div>
+          <Notification message={this.state.message} error={this.state.error} />
+          <div>
+            {
+              this.state.user === null ?
+                <LoginForm
+                  handleSubmit={this.login}
+                  handleChange={this.handleFieldChange}
+                  username={this.state.username}
+                  password={this.state.password}
+                />
+                : <MainView
+                  name={this.state.user.name}
+                  blogs={this.state.blogs}
+                  user={this.state.user}
+                  formVisible={this.state.blogFormVisible}
+                  title={this.state.title}
+                  author={this.state.author}
+                  url={this.state.url}
+                  handleLogout={this.logout}
+                  handleChange={this.handleFieldChange}
+                  handleSubmit={this.createBlog}
+                  toggleBlogForm={this.toggleBlogForm}
+                  handleLike={this.updateBlog}
+                  handleDelete={this.deleteBlog}
+                  users={this.state.users}
+                />
+            }
+          </div>
+        </div>
+      </Router>
     );
   }
 }

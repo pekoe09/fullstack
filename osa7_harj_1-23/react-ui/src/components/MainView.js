@@ -1,10 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Route } from 'react-router-dom'
 import BlogForm from './BlogForm'
 import Blog from './Blog'
+import Users from './Users'
 
 const MainView = ({ name, blogs, user, formVisible, title, author, url, handleLogout,
-  handleChange, handleSubmit, toggleBlogForm, handleLike, handleDelete }) => {
+  handleChange, handleSubmit, toggleBlogForm, handleLike, handleDelete, users }) => {
   const hideWhenVisible = { display: formVisible ? 'none' : '' }
   const showWhenVisible = { display: formVisible ? '' : 'none' }
 
@@ -25,15 +27,22 @@ const MainView = ({ name, blogs, user, formVisible, title, author, url, handleLo
       <div style={hideWhenVisible}>
         <button onClick={toggleBlogForm} style={{ margin: 10 }}>Show form</button>
       </div>
-      {blogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
-          handleLike={handleLike}
-          handleDelete={handleDelete}
-          user={user}
-        />
-      )}
+      <Route exact path='/users' render={() =>
+        <Users users={users} />
+      } />
+      <Route exact path='/' render={() =>
+        <div>
+          {blogs.map(blog =>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLike={handleLike}
+              handleDelete={handleDelete}
+              user={user}
+            />
+          )}
+        </div>
+      } />
     </div>
   )
 }
@@ -53,5 +62,6 @@ MainView.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   toggleBlogForm: PropTypes.func.isRequired,
   handleLike: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  handleDelete: PropTypes.func.isRequired,
+  users: PropTypes.arrayOf(PropTypes.object)
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 let notificationStyle = {
@@ -19,11 +18,7 @@ let errorStyle = {
   borderColor: 'red',
 }
 
-const Notification = ({notification}) => {
-  // if (notification.type === 'error') {
-  //   notificationStyle.color = 'red'
-  //   notificationStyle.borderColor = 'red'
-  // }
+const Notification = ({ notification }) => {
   return (
     <div>
       {
