@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 const Users = ({ users }) => {
   return (
@@ -12,7 +13,12 @@ const Users = ({ users }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => <tr key={user.id}><td>{user.name}</td><td>{user.blogs.length}</td></tr>)}
+          {users.map(user =>
+            <tr key={user.id}>
+              <td><NavLink to={`/users/${user.id}`}>{user.name}</NavLink></td>
+              <td>{user.blogs.length}</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
