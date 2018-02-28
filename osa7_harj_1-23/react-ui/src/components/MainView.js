@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Route } from 'react-router-dom'
 import BlogForm from './BlogForm'
 import Blog from './Blog'
+import BlogListing from './BlogListing'
 import User from './User'
 import Users from './Users'
 import NavBar from './NavBar'
@@ -10,8 +11,11 @@ import NavBar from './NavBar'
 class MainView extends React.Component {
 
   userById = (id) => {
-    console.log(this.props.users)
     return this.props.users.find(user => user.id === id)
+  }
+
+  blogById = (id) => {
+    return this.props.blogs.find(b => b.id === id)
   }
 
   render() {
@@ -45,15 +49,21 @@ class MainView extends React.Component {
         <Route exact path='/' render={() =>
           <div>
             {this.props.blogs.map(blog =>
-              <Blog
+              <BlogListing
                 key={blog.id}
                 blog={blog}
-                handleLike={this.props.handleLike}
-                handleDelete={this.props.handleDelete}
                 user={this.props.user}
               />
             )}
           </div>
+        } />
+        <Route exact path='/blogs/:id' render={(props) =>
+          <Blog
+            blog={this.blogById(props.match.params.id)}
+            user={this.props.user}
+            handleLike={this.props.handleLike}
+            handleDelete={this.props.handleDelete}
+          />
         } />
       </div>
     )

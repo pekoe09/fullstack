@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Blog from './Blog'
+import BlogListing from './BlogListing'
 
-describe('<Blog />', () => {
+describe('<BlogListing />', () => {
   let blogComponent
   let blog
 
