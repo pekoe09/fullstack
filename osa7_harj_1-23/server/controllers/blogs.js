@@ -10,6 +10,27 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs.map(Blog.format))
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body
+  try {
+    const match = await Blog.findById(request.params.id)
+    if (!match) {
+      return response.status(400).send({ error: 'nonexistent id' })
+    }
+    if (!body.comment) {
+      return response.status(400).json({ error: 'comment is mandatory' })
+    }
+
+    console.log('Match ', match)
+    match.comments = match.comments.concat(body.comment)
+    const commentedBlog = await Blog.findByIdAndUpdate(match.id, match, { new: true })
+    response.json(Blog.format(commentedBlog))
+  } catch (exception) {
+    console.log(exception)
+    response.status(400).send({ error: 'encountered an error while inserting a comment' })
+  }
+})
+
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
@@ -35,7 +56,8 @@ blogsRouter.post('/', async (request, response) => {
       author: body.author,
       url: body.url,
       likes: body.likes === undefined ? 0 : body.likes,
-      user: user._id
+      user: user._id,
+      comments: []
     })
 
     const savedBlog = await blog.save()
@@ -67,6 +89,7 @@ blogsRouter.put('/:id', async (request, response) => {
     if (!match) {
       return response.status(400).send({ error: 'nonexistent id' })
     }
+    blog.comments = match.comments
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     response.json(Blog.format(updatedBlog))
   } catch (exception) {
