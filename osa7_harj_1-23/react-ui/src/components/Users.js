@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 const Users = ({ users }) => {
   return (
@@ -25,4 +26,12 @@ const Users = ({ users }) => {
   )
 }
 
-export default Users
+const mapStateToProps = (store) => {
+  return {
+    users: store.users
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(Users)

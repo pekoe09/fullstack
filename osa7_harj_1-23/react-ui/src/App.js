@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import MainView from './components/MainView'
 import LoginForm from './components/LoginForm'
@@ -9,6 +9,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import userService from './services/users'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeUsers } from './reducers/userReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -22,23 +23,21 @@ class App extends React.Component {
       title: '',
       author: '',
       url: '',
-      comment: '',
-      users: []
+      comment: ''
     }
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
     }
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
-    userService.getAll().then(users =>
-      this.setState({ users })
-    )
+
+    const blogs = await blogService.getAll()
+    this.setState({ blogs })
+
+    await this.props.initializeUsers()
   }
 
   handleFieldChange = (event) => {
@@ -154,45 +153,45 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
+      <div>
+        <Notification message={this.state.message} error={this.state.error} />
         <div>
-          <Notification message={this.state.message} error={this.state.error} />
-          <div>
-            {
-              this.state.user === null ?
-                <LoginForm
-                  handleSubmit={this.login}
-                  handleChange={this.handleFieldChange}
-                  username={this.state.username}
-                  password={this.state.password}
-                />
-                : <MainView
-                  name={this.state.user.name}
-                  blogs={this.state.blogs}
-                  user={this.state.user}
-                  formVisible={this.state.blogFormVisible}
-                  title={this.state.title}
-                  author={this.state.author}
-                  url={this.state.url}
-                  comment={this.state.comment}
-                  handleLogout={this.logout}
-                  handleChange={this.handleFieldChange}
-                  handleSubmit={this.createBlog}
-                  handleComment={this.addComment}
-                  toggleBlogForm={this.toggleBlogForm}
-                  handleLike={this.updateBlog}
-                  handleDelete={this.deleteBlog}
-                  users={this.state.users}
-                />
-            }
-          </div>
+          {
+            this.state.user === null ?
+              <LoginForm
+                handleSubmit={this.login}
+                handleChange={this.handleFieldChange}
+                username={this.state.username}
+                password={this.state.password}
+              />
+              : <MainView
+                name={this.state.user.name}
+                blogs={this.state.blogs}
+                user={this.state.user}
+                formVisible={this.state.blogFormVisible}
+                title={this.state.title}
+                author={this.state.author}
+                url={this.state.url}
+                comment={this.state.comment}
+                handleLogout={this.logout}
+                handleChange={this.handleFieldChange}
+                handleSubmit={this.createBlog}
+                handleComment={this.addComment}
+                toggleBlogForm={this.toggleBlogForm}
+                handleLike={this.updateBlog}
+                handleDelete={this.deleteBlog}
+              />
+          }
         </div>
-      </Router>
+      </div>
     );
   }
 }
 
-export default connect(
+export default withRouter(connect(
   null,
-  { setNotification }
-)(App)
+  {
+    initializeUsers,
+    setNotification
+  }
+)(App))

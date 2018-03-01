@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Route } from 'react-router-dom'
+import { Route, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+
 import BlogForm from './BlogForm'
 import Blog from './Blog'
 import BlogListing from './BlogListing'
@@ -41,7 +43,7 @@ class MainView extends React.Component {
           <button onClick={this.props.toggleBlogForm} style={{ margin: 10 }}>Show form</button>
         </div>
         <Route exact path='/users' render={() =>
-          <Users users={this.props.users} />
+          <Users />
         } />
         <Route exact path='/users/:id' render={({ match }) =>
           <User user={this.userById(match.params.id)} />
@@ -73,8 +75,15 @@ class MainView extends React.Component {
   }
 }
 
+const mapStateToProps = (store) => {
+  return {
+    users: store.users
+  }
+}
 
-export default MainView
+export default withRouter(connect(
+  mapStateToProps
+)(MainView))
 
 MainView.propTypes = {
   name: PropTypes.string.isRequired,
@@ -91,6 +100,5 @@ MainView.propTypes = {
   handleComment: PropTypes.func.isRequired,
   toggleBlogForm: PropTypes.func.isRequired,
   handleLike: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  users: PropTypes.arrayOf(PropTypes.object)
+  handleDelete: PropTypes.func.isRequired
 }
