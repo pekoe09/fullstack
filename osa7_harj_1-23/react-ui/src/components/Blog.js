@@ -1,6 +1,8 @@
 import React from 'react'
+import CommentForm from './CommentForm'
 
-const Blog = ({ blog, user, handleLike, handleDelete }) => {
+const Blog = ({ blog, user, comment,
+   handleChange, handleLike, handleDelete, handleComment }) => {
   return (
     <div>
       <h2>{blog.title} {blog.author}</h2>
@@ -15,6 +17,11 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
         && <div><button onClick={handleDelete}>delete</button></div>
       }
       <h3>Comments</h3>
+      <CommentForm
+        comment={comment}
+        handleChange={handleChange}
+        handleComment={handleComment(blog.id)}
+      />
       {blog.comments.length === 0
         ? <div>There are no comments yet</div>
         : <ul>{blog.comments.map(c => <li key={c}>{c}</li>)}</ul>

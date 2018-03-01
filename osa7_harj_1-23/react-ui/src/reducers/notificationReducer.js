@@ -11,10 +11,12 @@ const notificationReducer = (store = {}, action) => {
 
 export const setNotification = (message, type, timeout) => {
   return async (dispatch) => {
+    console.log('Dispatching ', message)
     await dispatch({
       type: 'SET',
       notification: { message, type }
     })
+    console.log('Setting notification timeout for ', message, ' ', 1000*timeout, 'secs')
     setTimeout(() => {
       dispatch({ type: 'CLEAR' })
     }, timeout * 1000)

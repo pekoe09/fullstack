@@ -61,8 +61,11 @@ class MainView extends React.Component {
           <Blog
             blog={this.blogById(props.match.params.id)}
             user={this.props.user}
+            comment={this.props.comment}
+            handleChange={this.props.handleChange}
             handleLike={this.props.handleLike}
             handleDelete={this.props.handleDelete}
+            handleComment={this.props.handleComment}
           />
         } />
       </div>
@@ -81,9 +84,11 @@ MainView.propTypes = {
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  comment: PropTypes.string.isRequired,
   handleLogout: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  handleComment: PropTypes.func.isRequired,
   toggleBlogForm: PropTypes.func.isRequired,
   handleLike: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,

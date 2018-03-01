@@ -22,6 +22,7 @@ class App extends React.Component {
       title: '',
       author: '',
       url: '',
+      comment: '',
       users: []
     }
   }
@@ -96,6 +97,27 @@ class App extends React.Component {
     }
   }
 
+  addComment = (id) => {
+    return async () => {
+      try {
+        const comment = {
+          comment: this.state.comment
+        }
+        const blog = await blogService.comment(comment, id)
+        const blogs = await blogService.getAll()
+        this.setState({
+          blogs,
+          comment: ''
+        })
+        console.log('Triggering comment notification')
+        this.props.setNotification(`comment '${comment.comment}' added to blog ${blog.title}`, 'success', 5)
+      } catch (exception) {
+        console.log(exception)
+        this.props.setNotification('could not comment the blog', 'error', 5)
+      }
+    }
+  }
+
   updateBlog = async (blog) => {
     try {
       await blogService.update(blog)
@@ -152,9 +174,11 @@ class App extends React.Component {
                   title={this.state.title}
                   author={this.state.author}
                   url={this.state.url}
+                  comment={this.state.comment}
                   handleLogout={this.logout}
                   handleChange={this.handleFieldChange}
                   handleSubmit={this.createBlog}
+                  handleComment={this.addComment}
                   toggleBlogForm={this.toggleBlogForm}
                   handleLike={this.updateBlog}
                   handleDelete={this.deleteBlog}

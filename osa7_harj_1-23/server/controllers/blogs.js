@@ -21,7 +21,6 @@ blogsRouter.post('/:id/comments', async (request, response) => {
       return response.status(400).json({ error: 'comment is mandatory' })
     }
 
-    console.log('Match ', match)
     match.comments = match.comments.concat(body.comment)
     const commentedBlog = await Blog.findByIdAndUpdate(match.id, match, { new: true })
     response.json(Blog.format(commentedBlog))
