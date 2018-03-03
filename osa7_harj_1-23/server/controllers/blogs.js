@@ -22,7 +22,9 @@ blogsRouter.post('/:id/comments', async (request, response) => {
     }
 
     match.comments = match.comments.concat(body.comment)
-    const commentedBlog = await Blog.findByIdAndUpdate(match.id, match, { new: true })
+    const commentedBlog = await Blog
+      .findByIdAndUpdate(match.id, match, { new: true })
+      .populate('user', { _id: 1, username: 1, name: 1 })
     response.json(Blog.format(commentedBlog))
   } catch (exception) {
     console.log(exception)
@@ -59,8 +61,10 @@ blogsRouter.post('/', async (request, response) => {
       comments: []
     })
 
-    const savedBlog = await blog.save()
-
+    let savedBlog = await blog.save()
+    savedBlog = await Blog
+      .findById(savedBlog._id)
+      .populate('user', { _id: 1, username: 1, name: 1 })
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
@@ -89,7 +93,9 @@ blogsRouter.put('/:id', async (request, response) => {
       return response.status(400).send({ error: 'nonexistent id' })
     }
     blog.comments = match.comments
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    const updatedBlog = await Blog
+      .findByIdAndUpdate(request.params.id, blog, { new: true })
+      .populate('user', { _id: 1, username: 1, name: 1 })
     response.json(Blog.format(updatedBlog))
   } catch (exception) {
     console.log(exception)

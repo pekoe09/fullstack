@@ -29,7 +29,6 @@ const create = async (newBlog) => {
 }
 
 const comment = async (comment, blogId) => {
-  console.log('Commenting ', comment, ' on blog ', blogId)
   const response = await axios.post(`${baseUrl}/${blogId}/comments`, comment)
   return response.data
 }

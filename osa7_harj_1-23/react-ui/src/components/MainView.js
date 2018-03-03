@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Route, withRouter } from 'react-router-dom'
+import { Route, Redirect, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import { initializeBlogs } from '../reducers/blogReducer'
+import { initializeUsers } from '../reducers/userReducer'
 import BlogForm from './BlogForm'
 import Blog from './Blog'
 import BlogListing from './BlogListing'
@@ -30,13 +32,7 @@ class MainView extends React.Component {
         <h2>blog app</h2>
         <NavBar name={this.props.name} handleLogout={this.props.handleLogout} />
         <div style={showWhenVisible}>
-          <BlogForm
-            title={this.props.title}
-            author={this.props.author}
-            url={this.props.url}
-            handleChange={this.props.handleChange}
-            handleSubmit={this.props.handleSubmit}
-          />
+          <BlogForm />
           <button onClick={this.props.toggleBlogForm} style={{ margin: 10 }}>Hide form</button>
         </div>
         <div style={hideWhenVisible}>
@@ -59,17 +55,14 @@ class MainView extends React.Component {
             )}
           </div>
         } />
-        <Route exact path='/blogs/:id' render={(props) =>
+        <Route exact path='/blogs/:id' render={({ match, history }) =>
           <Blog
-            blog={this.blogById(props.match.params.id)}
+            blog={this.blogById(match.params.id)}
             user={this.props.user}
-            comment={this.props.comment}
-            handleChange={this.props.handleChange}
-            handleLike={this.props.handleLike}
-            handleDelete={this.props.handleDelete}
-            handleComment={this.props.handleComment}
+            history={history}
           />
-        } />
+        }
+        />
       </div>
     )
   }
@@ -77,28 +70,20 @@ class MainView extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
+    blogs: store.blogs,
     users: store.users
   }
 }
 
 export default withRouter(connect(
-  mapStateToProps
+  mapStateToProps,
+  { initializeBlogs, initializeUsers }
 )(MainView))
 
 MainView.propTypes = {
   name: PropTypes.string.isRequired,
-  blogs: PropTypes.arrayOf(PropTypes.object).isRequired,
   user: PropTypes.object.isRequired,
   formVisible: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
-  comment: PropTypes.string.isRequired,
   handleLogout: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleComment: PropTypes.func.isRequired,
-  toggleBlogForm: PropTypes.func.isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  toggleBlogForm: PropTypes.func.isRequired
 }
