@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { commentBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Button, Input } from 'semantic-ui-react'
 
 class CommentForm extends React.Component {
 
@@ -30,14 +31,29 @@ class CommentForm extends React.Component {
   }
 
   render() {
+    const inputStyle = {
+      width: '100%'
+    }
+    const inputContainerStyle = {
+      overflow: 'hidden',
+      paddingRight: 5
+    }
+    const buttonStyle = {
+      float: 'right'
+    }
+
     return (
       <div>
-        <input
-          name='comment'
-          value={this.state.comment}
-          onChange={this.handleChange}
-        />
-        <button onClick={this.handleComment}>add comment</button>
+        <Button primary style={buttonStyle} onClick={this.handleComment}>add comment</Button>
+        <div style={inputContainerStyle}>
+          <Input
+            name='comment'
+            value={this.state.comment}
+            onChange={this.handleChange}
+            placeholder={'Write a comment!'}
+            style={inputStyle}
+          />
+        </div>
       </div>
     )
   }

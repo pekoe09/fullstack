@@ -5,18 +5,20 @@ import { NavLink } from 'react-router-dom'
 class BlogListing extends React.Component {
 
   render() {
-    const blogStyle = {
-      paddingTop: 10,
-      paddingLeft: 2,
+    const blogListingStyle = {
+      listStyleType: 'none',
+      backgroundColor: 'white',
       border: 'solid',
       borderWidth: 1,
-      marginBottom: 5
+      borderColor: '#b3ecff',
+      marginBottom: 5,
+      padding: 5
     }
 
     return (
-      <div style={blogStyle} className='blog'>
+      <div style={blogListingStyle} className='blog'>
         <div className='titleAuthor'>
-          <NavLink to={`/blogs/${this.props.blog.id}`}>{this.props.blog.title} {this.props.blog.author}</NavLink>
+          <NavLink to={`/blogs/${this.props.blog.id}`}>{this.props.blog.title} by {this.props.blog.author}</NavLink>
         </div>
       </div>
     )

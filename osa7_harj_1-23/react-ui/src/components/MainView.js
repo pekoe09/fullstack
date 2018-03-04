@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Route, Redirect, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Button } from 'semantic-ui-react'
 
 import { initializeBlogs } from '../reducers/blogReducer'
 import { initializeUsers } from '../reducers/userReducer'
@@ -23,23 +24,34 @@ class MainView extends React.Component {
   }
 
   render() {
-
     const hideWhenVisible = { display: this.props.formVisible ? 'none' : '' }
     const showWhenVisible = { display: this.props.formVisible ? '' : 'none' }
+    const buttonStyle = {
+      marginBottom: 10
+    }
+    const blogListStyle = {
+      border: 'solid',
+      borderWidth: 1,
+      borderRadius: 4,
+      borderColor: '#b3ecff',
+      backgroundColor: '#e6f9ff',
+      boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+      padding: 10
+    }
 
     return (
       <div>
-        <h2>blog app</h2>
+        <h2>Blog app</h2>
         <NavBar
           name={this.props.user ? this.props.user.name : ''}
           handleLogout={this.props.handleLogout}
         />
         <div style={showWhenVisible}>
           <BlogForm />
-          <button onClick={this.props.toggleBlogForm} style={{ margin: 10 }}>Hide form</button>
+          <Button size='mini' style={buttonStyle} onClick={this.props.toggleBlogForm}>Hide form</Button>
         </div>
         <div style={hideWhenVisible}>
-          <button onClick={this.props.toggleBlogForm} style={{ margin: 10 }}>Show form</button>
+          <Button size='mini' style={buttonStyle} onClick={this.props.toggleBlogForm}>Show form</Button>
         </div>
         <Route exact path='/users' render={() =>
           <Users />
@@ -48,7 +60,7 @@ class MainView extends React.Component {
           <User user={this.userById(match.params.id)} />
         } />
         <Route exact path='/' render={() =>
-          <div>
+          <div style={blogListStyle}>
             {this.props.blogs.map(blog =>
               <BlogListing
                 key={blog.id}
