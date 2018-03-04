@@ -30,7 +30,10 @@ class MainView extends React.Component {
     return (
       <div>
         <h2>blog app</h2>
-        <NavBar name={this.props.name} handleLogout={this.props.handleLogout} />
+        <NavBar
+          name={this.props.user ? this.props.user.name : ''}
+          handleLogout={this.props.handleLogout}
+        />
         <div style={showWhenVisible}>
           <BlogForm />
           <button onClick={this.props.toggleBlogForm} style={{ margin: 10 }}>Hide form</button>
@@ -71,7 +74,8 @@ class MainView extends React.Component {
 const mapStateToProps = (store) => {
   return {
     blogs: store.blogs,
-    users: store.users
+    users: store.users,
+    user: store.user
   }
 }
 
@@ -81,8 +85,6 @@ export default withRouter(connect(
 )(MainView))
 
 MainView.propTypes = {
-  name: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired,
   formVisible: PropTypes.bool.isRequired,
   handleLogout: PropTypes.func.isRequired,
   toggleBlogForm: PropTypes.func.isRequired
